@@ -408,156 +408,197 @@ const assignments = [
     desc: "Captures user input dynamically, processes mathematical expressions using conditional logic and looping constructs with error handling.",
     tags: [["Loops","blue"],["Scanner","orange"],["Try-Catch","purple"]],
     file: "Calculator.java",
-    code: `import java.util.Scanner;
+    code: `import java.util.InputMismatchException;
+  import java.util.Scanner;
 
-public class Calculator {
+  public class Calculator {
 
-    // Evaluates a single operation between two numbers
-    public static double calculate(double a, double b, char op) {
-        switch (op) {
-            case '+': return a + b;
-            case '-': return a - b;
-            case '*': return a * b;
-            case '/':
-                if (b == 0) throw new ArithmeticException("Division by zero!");
-                return a / b;
-            case '%':
-                if (b == 0) throw new ArithmeticException("Modulo by zero!");
-                return a % b;
-            default: throw new IllegalArgumentException("Unknown operator: " + op);
+    static double readNumber(Scanner sc, String prompt) {
+      while (true) {
+        System.out.print(prompt);
+        try {
+          return sc.nextDouble();
+        } catch (InputMismatchException e) {
+          System.out.println("Invalid number. Try again.");
+          sc.next();
         }
+      }
     }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("=== Java Calculator ===");
-        System.out.println("Type 'exit' to quit.");
+      Scanner sc = new Scanner(System.in);
 
-        while (true) {
-            System.out.print("\\nEnter expression (e.g. 5 + 3): ");
-            String line = sc.nextLine().trim();
+      while (true) {
+        System.out.println("\n=== Simple Calculator ===");
+        System.out.println("1. Addition (+)");
+        System.out.println("2. Subtraction (-)");
+        System.out.println("3. Multiplication (*)");
+        System.out.println("4. Division (/)");
+        System.out.println("5. Modulo (%)");
+        System.out.println("0. Exit");
+        System.out.print("Enter choice: ");
 
-            if (line.equalsIgnoreCase("exit")) {
-                System.out.println("Goodbye!");
-                break;
-            }
-
-            try {
-                // Parse: number operator number
-                String[] parts = line.split("\\\\s+");
-                if (parts.length != 3)
-                    throw new IllegalArgumentException("Format must be: <num> <op> <num>");
-
-                double a  = Double.parseDouble(parts[0]);
-                char   op = parts[1].charAt(0);
-                double b  = Double.parseDouble(parts[2]);
-
-                double result = calculate(a, b, op);
-                System.out.printf("Result: %.4f%n", result);
-
-            } catch (NumberFormatException e) {
-                System.out.println("Error: Invalid number format.");
-            } catch (ArithmeticException e) {
-                System.out.println("Math Error: " + e.getMessage());
-            } catch (IllegalArgumentException e) {
-                System.out.println("Input Error: " + e.getMessage());
-            }
+        int choice;
+        try {
+          choice = sc.nextInt();
+        } catch (InputMismatchException e) {
+          System.out.println("Invalid choice. Enter a number.");
+          sc.next();
+          continue;
         }
-        sc.close();
+
+        if (choice == 0) {
+          System.out.println("Goodbye!");
+          break;
+        }
+
+        double a = readNumber(sc, "Enter first number : ");
+        double b = readNumber(sc, "Enter second number: ");
+
+        double result;
+        switch (choice) {
+          case 1:
+            result = a + b;
+            break;
+          case 2:
+            result = a - b;
+            break;
+          case 3:
+            result = a * b;
+            break;
+          case 4:
+            if (b == 0) {
+              System.out.println("Division by zero is not allowed.");
+              continue;
+            }
+            result = a / b;
+            break;
+          case 5:
+            if (b == 0) {
+              System.out.println("Modulo by zero is not allowed.");
+              continue;
+            }
+            result = a % b;
+            break;
+          default:
+            System.out.println("Invalid option.");
+            continue;
+        }
+
+        System.out.println("Result: " + result);
+      }
+
+      sc.close();
     }
-}`
+  }`
   },
   {
     title: "E-Commerce Order System",
     desc: "Order processing with multiple constructors, dynamic product input, total cost computation, discount policies, and invoice generation.",
     tags: [["Constructors","blue"],["OOP","orange"],["Discount Logic","purple"],["Invoice","green"]],
     file: "ECommerceSystem.java",
-    code: `import java.util.ArrayList;
-import java.util.Scanner;
+    code: `import java.util.Scanner;
 
-class Product {
+  class Product {
     String name;
     double price;
-    int    quantity;
+    int quantity;
     String category;
 
-    // Constructor 1: name + price only
+    // Constructor 1: name + price (default quantity and category)
     Product(String name, double price) {
-        this.name     = name;
-        this.price    = price;
-        this.quantity = 1;
-        this.category = "General";
+      this.name = name;
+      this.price = price;
+      this.quantity = 1;
+      this.category = "General";
     }
 
     // Constructor 2: full details
     Product(String name, double price, int quantity, String category) {
-        this.name     = name;
-        this.price    = price;
-        this.quantity = quantity;
-        this.category = category;
+      this.name = name;
+      this.price = price;
+      this.quantity = quantity;
+      this.category = category;
     }
 
-    double subtotal() { return price * quantity; }
-}
-
-public class ECommerceSystem {
-
-    static double applyDiscount(double total) {
-        if      (total >= 5000) return total * 0.20;  // 20% off
-        else if (total >= 2000) return total * 0.10;  // 10% off
-        else if (total >= 1000) return total * 0.05;  //  5% off
-        return 0;
+    double getSubtotal() {
+      return price * quantity;
     }
+  }
 
-    static void printInvoice(ArrayList<Product> cart, String customer) {
-        double subtotal = cart.stream().mapToDouble(Product::subtotal).sum();
-        double discount = applyDiscount(subtotal);
-        double tax      = (subtotal - discount) * 0.18; // 18% GST
-        double total    = subtotal - discount + tax;
+  public class ECommerceSystem {
 
-        System.out.println("\\n╔══════════════════════════════════════════════╗");
-        System.out.printf( "║  INVOICE — %-34s║%n", customer);
-        System.out.println("╠══════════════════════════════════════════════╣");
-        System.out.printf( "║  %-18s %6s %8s %10s ║%n","Item","Qty","Price","Subtotal");
-        System.out.println("╠══════════════════════════════════════════════╣");
-        for (Product p : cart)
-            System.out.printf("║  %-18s %6d %8.2f %10.2f ║%n",
-                              p.name, p.quantity, p.price, p.subtotal());
-        System.out.println("╠══════════════════════════════════════════════╣");
-        System.out.printf( "║  %-30s %14.2f ║%n", "Subtotal:", subtotal);
-        System.out.printf( "║  %-30s %14.2f ║%n", "Discount:", -discount);
-        System.out.printf( "║  %-30s %14.2f ║%n", "GST (18%):", tax);
-        System.out.println("╠══════════════════════════════════════════════╣");
-        System.out.printf( "║  %-30s %14.2f ║%n", "TOTAL PAYABLE:", total);
-        System.out.println("╚══════════════════════════════════════════════╝");
+    static double calculateDiscount(double subtotal) {
+      if (subtotal >= 5000) {
+        return subtotal * 0.20;
+      } else if (subtotal >= 2000) {
+        return subtotal * 0.10;
+      } else if (subtotal >= 1000) {
+        return subtotal * 0.05;
+      }
+      return 0;
     }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        ArrayList<Product> cart = new ArrayList<>();
+      Scanner sc = new Scanner(System.in);
 
-        // Pre-initialised products via different constructors
-        cart.add(new Product("Laptop",  55000.00, 1, "Electronics"));
-        cart.add(new Product("Pen Drive", 450.00));
+      System.out.print("Enter customer name: ");
+      String customer = sc.nextLine();
 
-        System.out.print("Enter customer name: ");
-        String customer = sc.nextLine();
+      System.out.print("How many products do you want to add? ");
+      int n = Integer.parseInt(sc.nextLine().trim());
 
-        System.out.print("How many products to add manually? ");
-        int n = Integer.parseInt(sc.nextLine().trim());
+      // Create an array large enough for default + user products
+      Product[] cart = new Product[n + 2];
+      int count = 0;
 
-        for (int i = 0; i < n; i++) {
-            System.out.print("  Product name     : "); String name = sc.nextLine();
-            System.out.print("  Price            : "); double price = Double.parseDouble(sc.nextLine());
-            System.out.print("  Quantity         : "); int qty = Integer.parseInt(sc.nextLine().trim());
-            System.out.print("  Category         : "); String cat = sc.nextLine();
-            cart.add(new Product(name, price, qty, cat));
-        }
+      // Default products using different constructors
+      cart[count++] = new Product("Pen Drive", 450.00);
+      cart[count++] = new Product("Notebook", 60.00, 2, "Stationery");
 
-        printInvoice(cart, customer);
-        sc.close();
+      for (int i = 0; i < n; i++) {
+        System.out.println("\nProduct " + (i + 1) + ":");
+        System.out.print("  Name     : ");
+        String name = sc.nextLine();
+
+        System.out.print("  Price    : ");
+        double price = Double.parseDouble(sc.nextLine().trim());
+
+        System.out.print("  Quantity : ");
+        int qty = Integer.parseInt(sc.nextLine().trim());
+
+        System.out.print("  Category : ");
+        String category = sc.nextLine();
+
+        cart[count++] = new Product(name, price, qty, category);
+      }
+
+      double subtotal = 0;
+      for (int i = 0; i < count; i++) {
+        subtotal += cart[i].getSubtotal();
+      }
+
+      double discount = calculateDiscount(subtotal);
+      double gst = (subtotal - discount) * 0.18;
+      double total = subtotal - discount + gst;
+
+      System.out.println("\n========== INVOICE ==========");
+      System.out.println("Customer: " + customer);
+      System.out.println("-----------------------------");
+      for (int i = 0; i < count; i++) {
+        Product p = cart[i];
+        System.out.printf("%d) %s  x%d  @ %.2f  = %.2f%n",
+            (i + 1), p.name, p.quantity, p.price, p.getSubtotal());
+      }
+      System.out.println("-----------------------------");
+      System.out.printf("Subtotal : %.2f%n", subtotal);
+      System.out.printf("Discount : %.2f%n", discount);
+      System.out.printf("GST 18%%  : %.2f%n", gst);
+      System.out.printf("TOTAL    : %.2f%n", total);
+
+      sc.close();
     }
-}`
+  }`
   },
   {
     title: "Method Overloading — Power & Absolute Value",
@@ -566,42 +607,62 @@ public class ECommerceSystem {
     file: "MathOperations.java",
     code: `public class MathOperations {
 
-    // ── Overloaded power() ──────────────────────────────────────────
-    static int    power(int    base, int exp) { return (int)   Math.pow(base, exp); }
-    static long   power(long   base, int exp) { return (long)  Math.pow(base, exp); }
-    static float  power(float  base, int exp) { return (float) Math.pow(base, exp); }
-    static double power(double base, int exp) { return         Math.pow(base, exp); }
+    // Overloaded power() methods (simple loop for int/long)
+    static int power(int base, int exp) {
+      int result = 1;
+      for (int i = 1; i <= exp; i++) {
+        result = result * base;
+      }
+      return result;
+    }
 
-    // ── Overloaded absolute() ───────────────────────────────────────
-    static int    absolute(int    n) { return Math.abs(n); }
-    static long   absolute(long   n) { return Math.abs(n); }
-    static float  absolute(float  n) { return Math.abs(n); }
-    static double absolute(double n) { return Math.abs(n); }
+    static long power(long base, int exp) {
+      long result = 1;
+      for (int i = 1; i <= exp; i++) {
+        result = result * base;
+      }
+      return result;
+    }
+
+    static float power(float base, int exp) {
+      return (float) Math.pow(base, exp);
+    }
+
+    static double power(double base, int exp) {
+      return Math.pow(base, exp);
+    }
+
+    // Overloaded absolute() methods
+    static int absolute(int n) {
+      return (n < 0) ? -n : n;
+    }
+
+    static long absolute(long n) {
+      return (n < 0) ? -n : n;
+    }
+
+    static float absolute(float n) {
+      return (n < 0) ? -n : n;
+    }
+
+    static double absolute(double n) {
+      return (n < 0) ? -n : n;
+    }
 
     public static void main(String[] args) {
+      System.out.println("=== Power (Method Overloading) ===");
+      System.out.println("2^5 (int)      = " + power(2, 5));
+      System.out.println("3^4 (long)     = " + power(3L, 4));
+      System.out.println("2.5^3 (float)  = " + power(2.5f, 3));
+      System.out.println("1.5^6 (double) = " + power(1.5, 6));
 
-        System.out.println("========== Power Computations ==========");
-        System.out.printf("int    2^10   = %d%n",    power(2,    10));
-        System.out.printf("long   3L^8   = %d%n",    power(3L,    8));
-        System.out.printf("float  2.5f^3 = %.4f%n",  power(2.5f,  3));
-        System.out.printf("double 1.5^7  = %.6f%n",  power(1.5,   7));
-
-        System.out.println("\\n--- Math.pow (static method) ---");
-        System.out.printf("Math.pow(2, 10)  = %.0f%n", Math.pow(2, 10));
-        System.out.printf("Math.pow(3, 8)   = %.0f%n", Math.pow(3, 8));
-
-        System.out.println("\\n======== Absolute Value Computations ========");
-        System.out.printf("int    |-42|   = %d%n",    absolute(-42));
-        System.out.printf("long   |-999L| = %d%n",    absolute(-999L));
-        System.out.printf("float  |-3.7f| = %.2f%n",  absolute(-3.7f));
-        System.out.printf("double |-2.718|= %.6f%n",  absolute(-2.71828));
-
-        System.out.println("\\n--- Math.abs (static method) ---");
-        System.out.printf("Math.abs(-42)    = %d%n",    Math.abs(-42));
-        System.out.printf("Math.abs(-3.7f)  = %.2f%n",  Math.abs(-3.7f));
-        System.out.printf("Math.abs(-2.718) = %.6f%n",  Math.abs(-2.71828));
+      System.out.println("\n=== Absolute Value (Method Overloading) ===");
+      System.out.println("abs(-10) (int)      = " + absolute(-10));
+      System.out.println("abs(-999L) (long)   = " + absolute(-999L));
+      System.out.println("abs(-3.7f) (float)  = " + absolute(-3.7f));
+      System.out.println("abs(-2.718) (double)= " + absolute(-2.718));
     }
-}`
+  }`
   },
   {
     title: "Array Operations",
@@ -743,72 +804,88 @@ public class InheritanceDemo {
     desc: "Implements an interface (Shape) across multiple classes (Circle, Rectangle, Triangle), demonstrating runtime polymorphism.",
     tags: [["Interface","blue"],["Polymorphism","orange"],["Abstraction","purple"]],
     file: "PolymorphismDemo.java",
-    code: `// ── Interface ─────────────────────────────────────────────────────
-interface Shape {
+    code: `// Interface
+  interface Shape {
     double area();
     double perimeter();
-    void   describe();       // default implementation allowed in Java 8+
-}
+  }
 
-// ── Circle ────────────────────────────────────────────────────────
-class Circle implements Shape {
+  // Circle class
+  class Circle implements Shape {
     double radius;
-    Circle(double r) { this.radius = r; }
 
-    @Override public double area()      { return Math.PI * radius * radius; }
-    @Override public double perimeter() { return 2 * Math.PI * radius; }
-    @Override public void   describe()  {
-        System.out.printf("Circle    | r=%.2f | Area=%.4f | Perimeter=%.4f%n",
-                          radius, area(), perimeter());
+    Circle(double radius) {
+      this.radius = radius;
     }
-}
 
-// ── Rectangle ─────────────────────────────────────────────────────
-class Rectangle implements Shape {
-    double width, height;
-    Rectangle(double w, double h) { width = w; height = h; }
-
-    @Override public double area()      { return width * height; }
-    @Override public double perimeter() { return 2 * (width + height); }
-    @Override public void   describe()  {
-        System.out.printf("Rectangle | w=%.2f h=%.2f | Area=%.4f | Perimeter=%.4f%n",
-                          width, height, area(), perimeter());
+    public double area() {
+      return Math.PI * radius * radius;
     }
-}
 
-// ── Triangle ──────────────────────────────────────────────────────
-class Triangle implements Shape {
+    public double perimeter() {
+      return 2 * Math.PI * radius;
+    }
+  }
+
+  // Rectangle class
+  class Rectangle implements Shape {
+    double length;
+    double width;
+
+    Rectangle(double length, double width) {
+      this.length = length;
+      this.width = width;
+    }
+
+    public double area() {
+      return length * width;
+    }
+
+    public double perimeter() {
+      return 2 * (length + width);
+    }
+  }
+
+  // Triangle class (Heron's formula)
+  class Triangle implements Shape {
     double a, b, c;
-    Triangle(double a, double b, double c) { this.a=a; this.b=b; this.c=c; }
 
-    @Override public double area() {
-        double s = (a+b+c)/2;
-        return Math.sqrt(s*(s-a)*(s-b)*(s-c));  // Heron's formula
+    Triangle(double a, double b, double c) {
+      this.a = a;
+      this.b = b;
+      this.c = c;
     }
-    @Override public double perimeter() { return a + b + c; }
-    @Override public void   describe()  {
-        System.out.printf("Triangle  | sides=%.2f,%.2f,%.2f | Area=%.4f | Perimeter=%.4f%n",
-                          a, b, c, area(), perimeter());
-    }
-}
 
-// ── Main ──────────────────────────────────────────────────────────
-public class PolymorphismDemo {
+    public double perimeter() {
+      return a + b + c;
+    }
+
+    public double area() {
+      double s = perimeter() / 2;
+      return Math.sqrt(s * (s - a) * (s - b) * (s - c));
+    }
+  }
+
+  public class PolymorphismDemo {
     public static void main(String[] args) {
-        Shape[] shapes = {
-            new Circle(7),
-            new Rectangle(5, 10),
-            new Triangle(3, 4, 5)
-        };
+      // One reference type (Shape) points to different objects
+      Shape[] shapes = new Shape[3];
+      shapes[0] = new Circle(7);
+      shapes[1] = new Rectangle(5, 10);
+      shapes[2] = new Triangle(3, 4, 5);
 
-        System.out.println("═══════════ Shape Polymorphism ═══════════");
-        for (Shape s : shapes) s.describe();   // runtime polymorphism
+      double totalArea = 0;
+      System.out.println("=== Shape Polymorphism ===");
+      for (int i = 0; i < shapes.length; i++) {
+        Shape s = shapes[i];
+        System.out.printf("Shape %d | Area = %.2f | Perimeter = %.2f%n",
+            (i + 1), s.area(), s.perimeter());
+        totalArea += s.area();
+      }
 
-        System.out.println("\\nTotal area of all shapes: " +
-            String.format("%.4f", java.util.Arrays.stream(shapes)
-                                       .mapToDouble(Shape::area).sum()));
+      System.out.printf("Total Area = %.2f%n", totalArea);
     }
-}`
+  }`
   },
   {
     title: "Abstract Class",
@@ -891,215 +968,239 @@ public class AbstractDemo {
     desc: "Simulates an ATM with balance check, deposit, and withdrawal. Uses try-catch-finally with ArithmeticException and IllegalArgumentException.",
     tags: [["Exception Handling","blue"],["Try-Catch-Finally","orange"],["OOP","purple"],["ATM","green"]],
     file: "ATMSimulation.java",
-    code: `import java.util.Scanner;
+    code: `import java.util.InputMismatchException;
+  import java.util.Scanner;
 
-class BankAccount {
+  class BankAccount {
     private String owner;
     private double balance;
-    private int    pin;
+    private int pin;
 
     BankAccount(String owner, double balance, int pin) {
-        this.owner   = owner;
-        this.balance = balance;
-        this.pin     = pin;
+      this.owner = owner;
+      this.balance = balance;
+      this.pin = pin;
     }
 
-    boolean validatePin(int attempt) { return this.pin == attempt; }
-    String  getOwner()               { return owner; }
-    double  getBalance()             { return balance; }
+    boolean validatePin(int attempt) {
+      return pin == attempt;
+    }
+
+    String getOwner() {
+      return owner;
+    }
+
+    double getBalance() {
+      return balance;
+    }
 
     void deposit(double amount) {
-        if (amount <= 0)
-            throw new IllegalArgumentException("Deposit amount must be positive.");
-        balance += amount;
-        System.out.printf("✔  Deposited ₹%.2f. New Balance: ₹%.2f%n", amount, balance);
+      if (amount <= 0) {
+        throw new IllegalArgumentException("Deposit amount must be positive.");
+      }
+      balance = balance + amount;
     }
 
     void withdraw(double amount) {
-        if (amount <= 0)
-            throw new IllegalArgumentException("Withdrawal amount must be positive.");
-        if (amount > balance)
-            throw new ArithmeticException("Insufficient funds! Available: ₹" + balance);
-        balance -= amount;
-        System.out.printf("✔  Withdrawn ₹%.2f. Remaining Balance: ₹%.2f%n", amount, balance);
+      if (amount <= 0) {
+        throw new IllegalArgumentException("Withdrawal amount must be positive.");
+      }
+      if (amount > balance) {
+        throw new ArithmeticException("Insufficient balance.");
+      }
+      balance = balance - amount;
     }
-}
+  }
 
-public class ATMSimulation {
+  public class ATMSimulation {
+
+    static int readInt(Scanner sc, String prompt) {
+      while (true) {
+        System.out.print(prompt);
+        try {
+          return sc.nextInt();
+        } catch (InputMismatchException e) {
+          System.out.println("Invalid input. Enter an integer.");
+          sc.next();
+        }
+      }
+    }
+
+    static double readDouble(Scanner sc, String prompt) {
+      while (true) {
+        System.out.print(prompt);
+        try {
+          return sc.nextDouble();
+        } catch (InputMismatchException e) {
+          System.out.println("Invalid input. Enter a number.");
+          sc.next();
+        }
+      }
+    }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        BankAccount account = new BankAccount("Rahul Sharma", 15000.00, 1234);
+      Scanner sc = new Scanner(System.in);
+      BankAccount account = new BankAccount("Student", 5000.00, 1234);
 
-        System.out.println("╔══════════════════════════════╗");
-        System.out.println("║        WELCOME TO ATM        ║");
-        System.out.println("╚══════════════════════════════╝");
+      System.out.println("=== ATM SIMULATION ===");
+      int pin = readInt(sc, "Enter 4-digit PIN: ");
 
-        // PIN verification
-        System.out.print("Enter your 4-digit PIN: ");
-        int pin = sc.nextInt();
-        if (!account.validatePin(pin)) {
-            System.out.println("✘ Invalid PIN. Access denied.");
-            sc.close(); return;
-        }
-        System.out.println("Hello, " + account.getOwner() + "!\\n");
-
-        boolean running = true;
-        while (running) {
-            System.out.println("┌─────────────────────────┐");
-            System.out.println("│  1. Check Balance       │");
-            System.out.println("│  2. Deposit             │");
-            System.out.println("│  3. Withdraw            │");
-            System.out.println("│  4. Exit                │");
-            System.out.println("└─────────────────────────┘");
-            System.out.print("Choose: ");
-
-            int choice = sc.nextInt();
-            System.out.println();
-
-            try {
-                switch (choice) {
-                    case 1:
-                        System.out.printf("Current Balance: ₹%.2f%n", account.getBalance());
-                        break;
-                    case 2:
-                        System.out.print("Enter deposit amount: ₹");
-                        account.deposit(sc.nextDouble());
-                        break;
-                    case 3:
-                        System.out.print("Enter withdrawal amount: ₹");
-                        account.withdraw(sc.nextDouble());
-                        break;
-                    case 4:
-                        System.out.println("Thank you for using ATM. Goodbye!");
-                        running = false;
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Invalid choice: " + choice);
-                }
-            } catch (ArithmeticException e) {
-                System.out.println("✘ Transaction Failed: " + e.getMessage());
-            } catch (IllegalArgumentException e) {
-                System.out.println("✘ Input Error: " + e.getMessage());
-            } finally {
-                if (running && choice >= 1 && choice <= 3)
-                    System.out.println("── Transaction processed ──\\n");
-            }
-        }
+      if (!account.validatePin(pin)) {
+        System.out.println("Invalid PIN. Access denied.");
         sc.close();
+        return;
+      }
+
+      System.out.println("Welcome, " + account.getOwner() + "!\n");
+
+      boolean running = true;
+      while (running) {
+        System.out.println("1. Check Balance");
+        System.out.println("2. Deposit");
+        System.out.println("3. Withdraw");
+        System.out.println("4. Exit");
+
+        int choice = readInt(sc, "Enter choice: ");
+
+        try {
+          switch (choice) {
+            case 1:
+              System.out.printf("Balance: %.2f%n", account.getBalance());
+              break;
+            case 2:
+              double dep = readDouble(sc, "Enter deposit amount: ");
+              account.deposit(dep);
+              System.out.println("Deposit successful.");
+              break;
+            case 3:
+              double wd = readDouble(sc, "Enter withdrawal amount: ");
+              account.withdraw(wd);
+              System.out.println("Withdrawal successful.");
+              break;
+            case 4:
+              System.out.println("Thank you. Bye!");
+              running = false;
+              break;
+            default:
+              throw new IllegalArgumentException("Invalid menu choice.");
+          }
+        } catch (ArithmeticException e) {
+          System.out.println("Transaction failed: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+          System.out.println("Input error: " + e.getMessage());
+        }
+
+        System.out.println();
+      }
+
+      sc.close();
     }
-}`
+  }`
   },
   {
     title: "Multi-Threaded Chat System",
     desc: "Simulates a chat system where each user runs as a thread. Uses isAlive(), join(), thread priorities, and demonstrates suspension, resumption, and stopping.",
     tags: [["Multithreading","blue"],["isAlive / join","orange"],["Thread Priority","purple"],["Synchronization","green"]],
     file: "ChatSystem.java",
-    code: `import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.Random;
+    code: `// Simple multi-thread example for college practicals
 
-// Shared message bus
-class MessageBus {
-    private static final BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+  class UserThread extends Thread {
+    private String username;
+    private String[] messages;
 
-    static void send(String msg) {
-        queue.add(msg);
-        System.out.println("[BUS] " + msg);
-    }
-
-    static String receive() throws InterruptedException {
-        return queue.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS);
-    }
-}
-
-// Each user is a thread
-class UserThread extends Thread {
-    private final String   username;
-    private final String[] messages;
-    private volatile boolean suspended = false;
-    private volatile boolean stopped   = false;
+    // Simple control flags
+    private volatile boolean paused = false;
+    private volatile boolean running = true;
 
     UserThread(String username, String[] messages, int priority) {
-        super(username);
-        this.username = username;
-        this.messages = messages;
-        setPriority(priority);
+      this.username = username;
+      this.messages = messages;
+      setName(username);
+      setPriority(priority);
     }
 
-    // Suspend / resume / stop controls
-    synchronized void suspendThread()  { suspended = true;  System.out.println("[" + username + "] Suspended."); }
-    synchronized void resumeThread()   { suspended = false; notify(); System.out.println("[" + username + "] Resumed."); }
-    void              stopThread()     { stopped = true; interrupt(); }
+    void pauseUser() {
+      paused = true;
+    }
 
-    @Override
+    void resumeUser() {
+      paused = false;
+    }
+
+    void stopUser() {
+      running = false;
+    }
+
     public void run() {
-        Random rng = new Random();
-        for (String msg : messages) {
-            if (stopped) break;
-
-            synchronized (this) {
-                while (suspended) {
-                    try { wait(); } catch (InterruptedException e) { return; }
-                }
-            }
-
-            try {
-                Thread.sleep(rng.nextInt(600) + 200);  // simulate typing delay
-                MessageBus.send("[" + username + " | P" + getPriority() + "]: " + msg);
-            } catch (InterruptedException e) {
-                break;
-            }
+      for (int i = 0; i < messages.length; i++) {
+        if (!running) {
+          break;
         }
-        System.out.println("[" + username + "] went offline.");
-    }
-}
 
-public class ChatSystem {
+        while (paused) {
+          try {
+            Thread.sleep(100);
+          } catch (InterruptedException e) {
+            return;
+          }
+        }
+
+        System.out.println("[" + username + " | P" + getPriority() + "] : " + messages[i]);
+
+        try {
+          Thread.sleep(300);
+        } catch (InterruptedException e) {
+          break;
+        }
+      }
+
+      System.out.println("[" + username + "] finished.");
+    }
+  }
+
+  public class ChatSystem {
     public static void main(String[] args) throws InterruptedException {
+      UserThread alice = new UserThread(
+          "Alice",
+          new String[]{"Hello!", "How are you?", "Working on practical.", "Bye!"},
+          Thread.NORM_PRIORITY);
 
-        UserThread alice = new UserThread("Alice",
-            new String[]{"Hey everyone!", "How's the project going?",
-                         "I'll push the update tonight.", "Bye!"},
-            Thread.NORM_PRIORITY);
+      UserThread bob = new UserThread(
+          "Bob",
+          new String[]{"Hi!", "I am fine.", "Let's submit today.", "See you."},
+          Thread.MIN_PRIORITY);
 
-        UserThread bob = new UserThread("Bob",
-            new String[]{"Hi Alice!", "Almost done with my module.",
-                         "Let's merge tomorrow.", "Later!"},
-            Thread.MIN_PRIORITY);
+      UserThread admin = new UserThread(
+          "Admin",
+          new String[]{"Notice: Lab will close at 5 PM.", "Reminder: Save your work."},
+          Thread.MAX_PRIORITY);
 
-        // High-priority admin thread
-        UserThread admin = new UserThread("ADMIN",
-            new String[]{"⚠ Server maintenance at 23:00",
-                         "✔ Maintenance complete. All systems go."},
-            Thread.MAX_PRIORITY);
+      System.out.println("=== Chat Started ===");
+      alice.start();
+      bob.start();
+      admin.start();
 
-        System.out.println("═══════ Chat System Started ═══════");
-        alice.start();
-        bob.start();
-        admin.start();
+      // Pause and resume Bob
+      Thread.sleep(600);
+      System.out.println("\n[Main] Pausing Bob for 1 second...");
+      bob.pauseUser();
+      Thread.sleep(1000);
+      bob.resumeUser();
+      System.out.println("[Main] Bob resumed.\n");
 
-        // Let them chat a bit, then demonstrate suspend/resume on Bob
-        Thread.sleep(800);
-        bob.suspendThread();
-        System.out.println("[Main] Bob paused for 1 second...");
-        Thread.sleep(1000);
-        bob.resumeThread();
+      // Check isAlive()
+      System.out.println("Alice alive? " + alice.isAlive());
+      System.out.println("Bob alive?   " + bob.isAlive());
+      System.out.println("Admin alive? " + admin.isAlive());
 
-        // Check liveness with isAlive()
-        System.out.printf("%n[Main] Alice alive? %b | Bob alive? %b | Admin alive? %b%n",
-                          alice.isAlive(), bob.isAlive(), admin.isAlive());
+      // Wait for all to complete
+      alice.join();
+      bob.join();
+      admin.join();
 
-        // Wait for all threads to finish
-        alice.join();
-        bob.join();
-        admin.join();
-
-        System.out.println("\\n[Main] All threads finished. Chat closed.");
-        System.out.printf("[Main] Alice alive? %b | Bob alive? %b | Admin alive? %b%n",
-                          alice.isAlive(), bob.isAlive(), admin.isAlive());
+      System.out.println("\n=== Chat Closed ===");
     }
-}`
+  }`
   }
 ];
 
@@ -1211,4 +1312,3 @@ function syntaxHL(code) {
 </script>
 </body>
 </html>
-`
