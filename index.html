@@ -634,19 +634,31 @@ const assignments = [
 
     // Overloaded absolute() methods
     static int absolute(int n) {
-      return (n < 0) ? -n : n;
+      if (n < 0) {
+        return -n;
+      }
+      return n;
     }
 
     static long absolute(long n) {
-      return (n < 0) ? -n : n;
+      if (n < 0) {
+        return -n;
+      }
+      return n;
     }
 
     static float absolute(float n) {
-      return (n < 0) ? -n : n;
+      if (n < 0) {
+        return -n;
+      }
+      return n;
     }
 
     static double absolute(double n) {
-      return (n < 0) ? -n : n;
+      if (n < 0) {
+        return -n;
+      }
+      return n;
     }
 
     public static void main(String[] args) {
@@ -675,33 +687,50 @@ public class ArrayOperations {
 
     static void display(int[] arr) {
         System.out.print("Elements : [ ");
-        for (int x : arr) System.out.print(x + " ");
+      for (int x : arr) {
+        System.out.print(x + " ");
+      }
         System.out.println("]");
     }
 
     static int max(int[] arr) {
         int m = arr[0];
-        for (int x : arr) if (x > m) m = x;
+      for (int x : arr) {
+        if (x > m) {
+          m = x;
+        }
+      }
         return m;
     }
 
     static int min(int[] arr) {
         int m = arr[0];
-        for (int x : arr) if (x < m) m = x;
+      for (int x : arr) {
+        if (x < m) {
+          m = x;
+        }
+      }
         return m;
     }
 
     static long sum(int[] arr) {
         long s = 0;
-        for (int x : arr) s += x;
+      for (int x : arr) {
+        s += x;
+      }
         return s;
     }
 
-    static double average(int[] arr) { return (double) sum(arr) / arr.length; }
+    static double average(int[] arr) {
+      return (double) sum(arr) / arr.length;
+    }
 
     static int search(int[] arr, int target) {
-        for (int i = 0; i < arr.length; i++)
-            if (arr[i] == target) return i;
+      for (int i = 0; i < arr.length; i++) {
+        if (arr[i] == target) {
+          return i;
+        }
+      }
         return -1;
     }
 
@@ -713,7 +742,9 @@ public class ArrayOperations {
         int[] arr = new int[n];
 
         System.out.println("Enter " + n + " integers:");
-        for (int i = 0; i < n; i++) arr[i] = sc.nextInt();
+        for (int i = 0; i < n; i++) {
+          arr[i] = sc.nextInt();
+        }
 
         System.out.println("\\n========== Array Operations ==========");
         display(arr);
@@ -726,10 +757,11 @@ public class ArrayOperations {
         int target = sc.nextInt();
         int idx    = search(arr, target);
 
-        if (idx != -1)
-            System.out.println(target + " found at index " + idx + ".");
-        else
-            System.out.println(target + " not found in the array.");
+        if (idx != -1) {
+          System.out.println(target + " found at index " + idx + ".");
+        } else {
+          System.out.println(target + " not found in the array.");
+        }
 
         sc.close();
     }
@@ -929,8 +961,15 @@ class Car extends Vehicle {
         this.doors = doors;
     }
 
-    @Override public double fuelEfficiency() { return 15.5; }
-    @Override public String vehicleType()    { return "Car (" + doors + "-door)"; }
+    @Override
+    public double fuelEfficiency() {
+      return 15.5;
+    }
+
+    @Override
+    public String vehicleType() {
+      return "Car (" + doors + "-door)";
+    }
 }
 
 // ── Concrete Subclass 2 ───────────────────────────────────────────
@@ -942,9 +981,20 @@ class Bike extends Vehicle {
         this.hasSidecar = hasSidecar;
     }
 
-    @Override public double fuelEfficiency() { return hasSidecar ? 28.0 : 40.0; }
-    @Override public String vehicleType()    {
-        return "Motorcycle" + (hasSidecar ? " with Sidecar" : "");
+    @Override
+    public double fuelEfficiency() {
+      if (hasSidecar) {
+        return 28.0;
+      }
+      return 40.0;
+    }
+
+    @Override
+    public String vehicleType() {
+      if (hasSidecar) {
+        return "Motorcycle with Sidecar";
+      }
+      return "Motorcycle";
     }
 }
 
@@ -959,7 +1009,9 @@ public class AbstractDemo {
         };
 
         System.out.println("═══════════ Vehicle Fleet ═══════════");
-        for (Vehicle v : fleet) v.displayInfo();
+        for (Vehicle v : fleet) {
+          v.displayInfo();
+        }
     }
 }`
   },
