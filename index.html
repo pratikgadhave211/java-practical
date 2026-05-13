@@ -346,16 +346,6 @@
     color: #cdd6f4;
   }
 
-  /* Syntax highlighting */
-  .kw  { color: #cba6f7; font-weight: 600; }  /* keywords */
-  .ty  { color: #89dceb; }                    /* types */
-  .str { color: #a6e3a1; }                    /* strings */
-  .num { color: #fab387; }                    /* numbers */
-  .cm  { color: #585b70; font-style: italic; } /* comments */
-  .fn  { color: #89b4fa; }                    /* functions */
-  .cl  { color: #f9e2af; }                    /* class names */
-  .an  { color: #f38ba8; }                    /* annotations */
-
   /* Footer */
   footer {
     position: relative;
@@ -1281,8 +1271,8 @@ assignments.forEach((a, i) => {
     .replace(/</g,'&lt;')
     .replace(/>/g,'&gt;');
 
-  // Basic syntax highlight
-  const highlighted = syntaxHL(escaped);
+  // Render escaped code as-is (no extra highlighting spans)
+  const highlighted = escaped;
 
   section.innerHTML = `
     <div class="card-header">
@@ -1328,38 +1318,6 @@ function copyCode(btn, i) {
       btn.innerHTML = '<span class="copy-icon">⎘</span> Copy Code';
     }, 2200);
   });
-}
-
-// Minimal syntax highlighter
-function syntaxHL(code) {
-  const KW = ['public','private','protected','static','final','class','interface',
-              'abstract','extends','implements','new','return','void','if','else',
-              'for','while','do','switch','case','break','continue','default','try',
-              'catch','finally','throw','throws','import','package','this','super',
-              'null','true','false','instanceof','synchronized','volatile'];
-  const TY = ['int','double','float','long','boolean','char','byte','short',
-              'String','Scanner','System','Math','Thread','Object'];
-
-  // Comments
-  code = code.replace(/(\/\/[^\n]*)/g, '<span class="cm">$1</span>');
-  code = code.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="cm">$1</span>');
-  // Strings
-  code = code.replace(/(&quot;[^&]*?&quot;)/g, '<span class="str">$1</span>');
-  // Numbers
-  code = code.replace(/\b(\d+\.?\d*[fFdDlL]?)\b/g, '<span class="num">$1</span>');
-  // Annotations
-  code = code.replace(/(@\w+)/g, '<span class="an">$1</span>');
-  // Keywords
-  KW.forEach(k => {
-    code = code.replace(new RegExp(`\\b(${k})\\b`, 'g'), '<span class="kw">$1</span>');
-  });
-  // Types
-  TY.forEach(t => {
-    code = code.replace(new RegExp(`\\b(${t})\\b`, 'g'), '<span class="ty">$1</span>');
-  });
-  // Class-like names
-  code = code.replace(/\b([A-Z][A-Za-z0-9]+)\b/g, '<span class="cl">$1</span>');
-  return code;
 }
 </script>
 </body>
