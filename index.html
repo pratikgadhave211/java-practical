@@ -419,7 +419,8 @@ const assignments = [
       Scanner sc = new Scanner(System.in);
 
       while (true) {
-        System.out.println("\n=== Simple Calculator ===");
+        System.out.println();
+        System.out.println("=== Simple Calculator ===");
         System.out.println("1. Addition (+)");
         System.out.println("2. Subtraction (-)");
         System.out.println("3. Multiplication (*)");
@@ -547,7 +548,8 @@ const assignments = [
       cart[count++] = new Product("Notebook", 60.00, 2, "Stationery");
 
       for (int i = 0; i < n; i++) {
-        System.out.println("\nProduct " + (i + 1) + ":");
+        System.out.println();
+        System.out.println("Product " + (i + 1) + ":");
         System.out.print("  Name     : ");
         String name = sc.nextLine();
 
@@ -572,7 +574,8 @@ const assignments = [
       double gst = (subtotal - discount) * 0.18;
       double total = subtotal - discount + gst;
 
-      System.out.println("\n========== INVOICE ==========");
+      System.out.println();
+      System.out.println("========== INVOICE ==========");
       System.out.println("Customer: " + customer);
       System.out.println("-----------------------------");
       for (int i = 0; i < count; i++) {
@@ -658,7 +661,8 @@ const assignments = [
       System.out.println("2.5^3 (float)  = " + power(2.5f, 3));
       System.out.println("1.5^6 (double) = " + power(1.5, 6));
 
-      System.out.println("\n=== Absolute Value (Method Overloading) ===");
+      System.out.println();
+      System.out.println("=== Absolute Value (Method Overloading) ===");
       System.out.println("abs(-10) (int)      = " + absolute(-10));
       System.out.println("abs(-999L) (long)   = " + absolute(-999L));
       System.out.println("abs(-3.7f) (float)  = " + absolute(-3.7f));
@@ -736,14 +740,16 @@ public class ArrayOperations {
           arr[i] = sc.nextInt();
         }
 
-        System.out.println("\\n========== Array Operations ==========");
+        System.out.println();
+        System.out.println("========== Array Operations ==========");
         display(arr);
         System.out.println("Maximum  : " + max(arr));
         System.out.println("Minimum  : " + min(arr));
         System.out.println("Sum      : " + sum(arr));
         System.out.printf( "Average  : %.2f%n", average(arr));
 
-        System.out.print("\\nEnter element to search: ");
+        System.out.println();
+        System.out.print("Enter element to search: ");
         int target = sc.nextInt();
         int idx    = search(arr, target);
 
@@ -811,7 +817,8 @@ public class InheritanceDemo {
         generic.eat();
         generic.sleep();
 
-        System.out.println("\\n── Dog (extends Animal) ──");
+        System.out.println();
+        System.out.println("── Dog (extends Animal) ──");
         Dog dog = new Dog("Buddy", 3, "Golden Retriever");
         dog.info();         // overridden version
         dog.eat();          // inherited
@@ -1224,11 +1231,13 @@ public class AbstractDemo {
 
       // Pause and resume Bob
       Thread.sleep(600);
-      System.out.println("\n[Main] Pausing Bob for 1 second...");
+      System.out.println();
+      System.out.println("[Main] Pausing Bob for 1 second...");
       bob.pauseUser();
       Thread.sleep(1000);
       bob.resumeUser();
-      System.out.println("[Main] Bob resumed.\n");
+      System.out.println("[Main] Bob resumed.");
+      System.out.println();
 
       // Check isAlive()
       System.out.println("Alice alive? " + alice.isAlive());
@@ -1240,7 +1249,8 @@ public class AbstractDemo {
       bob.join();
       admin.join();
 
-      System.out.println("\n=== Chat Closed ===");
+      System.out.println();
+      System.out.println("=== Chat Closed ===");
     }
   }`
   }
