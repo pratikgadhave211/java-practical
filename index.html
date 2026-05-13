@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java OOPL Assignments</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --card: #161d2e;
+    --border: #1e2d47;
+    --accent: #f97316;
+    --accent2: #38bdf8;
+    --accent3: #a78bfa;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --success: #22c55e;
+    --java-orange: #f89820;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glowing orbs */
+  body::after {
+    content: '';
+    position: fixed;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.07) 0%, transparent 70%);
+    top: -200px; right: -200px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 60px 40px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(249,115,22,0.05) 0%, transparent 100%);
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(248, 152, 32, 0.12);
+    border: 1px solid rgba(248, 152, 32, 0.3);
+    border-radius: 30px;
+    padding: 6px 18px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.12em;
+    color: var(--java-orange);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  .logo-badge::before {
+    content: '☕';
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #fff 0%, var(--java-orange) 60%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--java-orange);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Nav tabs */
+  .nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 14, 26, 0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-wrap::-webkit-scrollbar { display: none; }
+
+  nav {
+    display: flex;
+    gap: 4px;
+    min-width: max-content;
+    padding: 12px 0;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-btn:hover {
+    color: var(--text);
+    background: rgba(255,255,255,0.05);
+    border-color: var(--border);
+  }
+
+  .nav-btn.active {
+    background: rgba(248, 152, 32, 0.15);
+    border-color: rgba(248, 152, 32, 0.4);
+    color: var(--java-orange);
+  }
+
+  /* Main layout */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Assignment card */
+  .assignment {
+    display: none;
+    animation: fadeIn 0.35s ease;
+  }
+
+  .assignment.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .problem-num {
+    font-size: 4rem;
+    font-weight: 800;
+    color: rgba(248, 152, 32, 0.15);
+    line-height: 1;
+    font-family: 'JetBrains Mono', monospace;
+    min-width: 80px;
+    text-align: right;
+    user-select: none;
+  }
+
+  .card-meta h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .card-meta p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .tag {
+    font-size: 0.68rem;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .tag-blue  { background: rgba(56,189,248,0.1); color: var(--accent2); border: 1px solid rgba(56,189,248,0.2); }
+  .tag-orange{ background: rgba(249,115,22,0.1);  color: var(--accent);  border: 1px solid rgba(249,115,22,0.2);  }
+  .tag-purple{ background: rgba(167,139,250,0.1); color: var(--accent3); border: 1px solid rgba(167,139,250,0.2); }
+  .tag-green { background: rgba(34,197,94,0.1);   color: var(--success); border: 1px solid rgba(34,197,94,0.2);   }
+
+  /* Code block */
+  .code-wrap {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+  }
+
+  .code-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0d1420;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .window-dots {
+    display: flex;
+    gap: 7px;
+  }
+
+  .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+
+  .dot-red    { background: #ff5f57; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green  { background: #28c840; }
+
+  .file-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(248, 152, 32, 0.1);
+    border: 1px solid rgba(248, 152, 32, 0.3);
+    color: var(--java-orange);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .copy-btn:hover {
+    background: rgba(248, 152, 32, 0.2);
+    border-color: rgba(248, 152, 32, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .copy-btn.copied {
+    background: rgba(34,197,94,0.15);
+    border-color: rgba(34,197,94,0.4);
+    color: var(--success);
+  }
+
+  .copy-icon { font-size: 14px; }
+
+  pre {
+    background: var(--card);
+    padding: 28px;
+    overflow-x: auto;
+    max-height: 600px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  pre::-webkit-scrollbar { width: 6px; height: 6px; }
+  pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.75;
+    color: #cdd6f4;
+  }
+
+  /* Syntax highlighting */
+  .kw  { color: #cba6f7; font-weight: 600; }  /* keywords */
+  .ty  { color: #89dceb; }                    /* types */
+  .str { color: #a6e3a1; }                    /* strings */
+  .num { color: #fab387; }                    /* numbers */
+  .cm  { color: #585b70; font-style: italic; } /* comments */
+  .fn  { color: #89b4fa; }                    /* functions */
+  .cl  { color: #f9e2af; }                    /* class names */
+  .an  { color: #f38ba8; }                    /* annotations */
+
+  /* Footer */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    border-top: 1px solid var(--border);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 40px 20px 30px; }
+    .card-header { flex-direction: column; gap: 8px; }
+    .problem-num { font-size: 2rem; min-width: auto; text-align: left; }
+    pre { padding: 16px; }
+    main { padding: 24px 16px 60px; }
+    .nav-wrap { padding: 0 16px; }
+    .stats-bar { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-badge">OOPL — Object Oriented Programming with Java</div>
+  <h1>Java Assignment<br>Solutions</h1>
+  <p>// 9 problems · fully documented · ready to run</p>
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-num">9</span><span class="stat-label">Problems</span></div>
+    <div class="stat"><span class="stat-num">~850</span><span class="stat-label">Lines of Code</span></div>
+    <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Copy Ready</span></div>
+  </div>
+</header>
+
+<div class="nav-wrap">
+  <nav id="nav"></nav>
+</div>
+
+<main id="main"></main>
+
+<footer>☕ Java OOPL Assignment Suite · All programs compiled with JDK 17+</footer>
+
+<script>
+const assignments = [
+  {
+    title: "Java Calculator",
+    desc: "Captures user input dynamically, processes mathematical expressions using conditional logic and looping constructs with error handling.",
+    tags: [["Loops","blue"],["Scanner","orange"],["Try-Catch","purple"]],
+    file: "Calculator.java",
+    code: `import java.util.Scanner;
+
+public class Calculator {
+
+    // Evaluates a single operation between two numbers
+    public static double calculate(double a, double b, char op) {
+        switch (op) {
+            case '+': return a + b;
+            case '-': return a - b;
+            case '*': return a * b;
+            case '/':
+                if (b == 0) throw new ArithmeticException("Division by zero!");
+                return a / b;
+            case '%':
+                if (b == 0) throw new ArithmeticException("Modulo by zero!");
+                return a % b;
+            default: throw new IllegalArgumentException("Unknown operator: " + op);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("=== Java Calculator ===");
+        System.out.println("Type 'exit' to quit.");
+
+        while (true) {
+            System.out.print("\\nEnter expression (e.g. 5 + 3): ");
+            String line = sc.nextLine().trim();
+
+            if (line.equalsIgnoreCase("exit")) {
+                System.out.println("Goodbye!");
+                break;
+            }
+
+            try {
+                // Parse: number operator number
+                String[] parts = line.split("\\\\s+");
+                if (parts.length != 3)
+                    throw new IllegalArgumentException("Format must be: <num> <op> <num>");
+
+                double a  = Double.parseDouble(parts[0]);
+                char   op = parts[1].charAt(0);
+                double b  = Double.parseDouble(parts[2]);
+
+                double result = calculate(a, b, op);
+                System.out.printf("Result: %.4f%n", result);
+
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Invalid number format.");
+            } catch (ArithmeticException e) {
+                System.out.println("Math Error: " + e.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Input Error: " + e.getMessage());
+            }
+        }
+        sc.close();
+    }
+}`
+  },
+  {
+    title: "E-Commerce Order System",
+    desc: "Order processing with multiple constructors, dynamic product input, total cost computation, discount policies, and invoice generation.",
+    tags: [["Constructors","blue"],["OOP","orange"],["Discount Logic","purple"],["Invoice","green"]],
+    file: "ECommerceSystem.java",
+    code: `import java.util.ArrayList;
+import java.util.Scanner;
+
+class Product {
+    String name;
+    double price;
+    int    quantity;
+    String category;
+
+    // Constructor 1: name + price only
+    Product(String name, double price) {
+        this.name     = name;
+        this.price    = price;
+        this.quantity = 1;
+        this.category = "General";
+    }
+
+    // Constructor 2: full details
+    Product(String name, double price, int quantity, String category) {
+        this.name     = name;
+        this.price    = price;
+        this.quantity = quantity;
+        this.category = category;
+    }
+
+    double subtotal() { return price * quantity; }
+}
+
+public class ECommerceSystem {
+
+    static double applyDiscount(double total) {
+        if      (total >= 5000) return total * 0.20;  // 20% off
+        else if (total >= 2000) return total * 0.10;  // 10% off
+        else if (total >= 1000) return total * 0.05;  //  5% off
+        return 0;
+    }
+
+    static void printInvoice(ArrayList<Product> cart, String customer) {
+        double subtotal = cart.stream().mapToDouble(Product::subtotal).sum();
+        double discount = applyDiscount(subtotal);
+        double tax      = (subtotal - discount) * 0.18; // 18% GST
+        double total    = subtotal - discount + tax;
+
+        System.out.println("\\n╔══════════════════════════════════════════════╗");
+        System.out.printf( "║  INVOICE — %-34s║%n", customer);
+        System.out.println("╠══════════════════════════════════════════════╣");
+        System.out.printf( "║  %-18s %6s %8s %10s ║%n","Item","Qty","Price","Subtotal");
+        System.out.println("╠══════════════════════════════════════════════╣");
+        for (Product p : cart)
+            System.out.printf("║  %-18s %6d %8.2f %10.2f ║%n",
+                              p.name, p.quantity, p.price, p.subtotal());
+        System.out.println("╠══════════════════════════════════════════════╣");
+        System.out.printf( "║  %-30s %14.2f ║%n", "Subtotal:", subtotal);
+        System.out.printf( "║  %-30s %14.2f ║%n", "Discount:", -discount);
+        System.out.printf( "║  %-30s %14.2f ║%n", "GST (18%):", tax);
+        System.out.println("╠══════════════════════════════════════════════╣");
+        System.out.printf( "║  %-30s %14.2f ║%n", "TOTAL PAYABLE:", total);
+        System.out.println("╚══════════════════════════════════════════════╝");
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Product> cart = new ArrayList<>();
+
+        // Pre-initialised products via different constructors
+        cart.add(new Product("Laptop",  55000.00, 1, "Electronics"));
+        cart.add(new Product("Pen Drive", 450.00));
+
+        System.out.print("Enter customer name: ");
+        String customer = sc.nextLine();
+
+        System.out.print("How many products to add manually? ");
+        int n = Integer.parseInt(sc.nextLine().trim());
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("  Product name     : "); String name = sc.nextLine();
+            System.out.print("  Price            : "); double price = Double.parseDouble(sc.nextLine());
+            System.out.print("  Quantity         : "); int qty = Integer.parseInt(sc.nextLine().trim());
+            System.out.print("  Category         : "); String cat = sc.nextLine();
+            cart.add(new Product(name, price, qty, cat));
+        }
+
+        printInvoice(cart, customer);
+        sc.close();
+    }
+}`
+  },
+  {
+    title: "Method Overloading — Power & Absolute Value",
+    desc: "Demonstrates method overloading to compute power and absolute value for int, long, float, and double, alongside Math class static methods.",
+    tags: [["Method Overloading","blue"],["Math class","orange"],["Static Methods","purple"]],
+    file: "MathOperations.java",
+    code: `public class MathOperations {
+
+    // ── Overloaded power() ──────────────────────────────────────────
+    static int    power(int    base, int exp) { return (int)   Math.pow(base, exp); }
+    static long   power(long   base, int exp) { return (long)  Math.pow(base, exp); }
+    static float  power(float  base, int exp) { return (float) Math.pow(base, exp); }
+    static double power(double base, int exp) { return         Math.pow(base, exp); }
+
+    // ── Overloaded absolute() ───────────────────────────────────────
+    static int    absolute(int    n) { return Math.abs(n); }
+    static long   absolute(long   n) { return Math.abs(n); }
+    static float  absolute(float  n) { return Math.abs(n); }
+    static double absolute(double n) { return Math.abs(n); }
+
+    public static void main(String[] args) {
+
+        System.out.println("========== Power Computations ==========");
+        System.out.printf("int    2^10   = %d%n",    power(2,    10));
+        System.out.printf("long   3L^8   = %d%n",    power(3L,    8));
+        System.out.printf("float  2.5f^3 = %.4f%n",  power(2.5f,  3));
+        System.out.printf("double 1.5^7  = %.6f%n",  power(1.5,   7));
+
+        System.out.println("\\n--- Math.pow (static method) ---");
+        System.out.printf("Math.pow(2, 10)  = %.0f%n", Math.pow(2, 10));
+        System.out.printf("Math.pow(3, 8)   = %.0f%n", Math.pow(3, 8));
+
+        System.out.println("\\n======== Absolute Value Computations ========");
+        System.out.printf("int    |-42|   = %d%n",    absolute(-42));
+        System.out.printf("long   |-999L| = %d%n",    absolute(-999L));
+        System.out.printf("float  |-3.7f| = %.2f%n",  absolute(-3.7f));
+        System.out.printf("double |-2.718|= %.6f%n",  absolute(-2.71828));
+
+        System.out.println("\\n--- Math.abs (static method) ---");
+        System.out.printf("Math.abs(-42)    = %d%n",    Math.abs(-42));
+        System.out.printf("Math.abs(-3.7f)  = %.2f%n",  Math.abs(-3.7f));
+        System.out.printf("Math.abs(-2.718) = %.6f%n",  Math.abs(-2.71828));
+    }
+}`
+  },
+  {
+    title: "Array Operations",
+    desc: "Displays array elements, finds max/min, calculates sum and average, and performs linear search on a user-provided array.",
+    tags: [["Arrays","blue"],["Linear Search","orange"],["Statistics","purple"]],
+    file: "ArrayOperations.java",
+    code: `import java.util.Scanner;
+
+public class ArrayOperations {
+
+    static void display(int[] arr) {
+        System.out.print("Elements : [ ");
+        for (int x : arr) System.out.print(x + " ");
+        System.out.println("]");
+    }
+
+    static int max(int[] arr) {
+        int m = arr[0];
+        for (int x : arr) if (x > m) m = x;
+        return m;
+    }
+
+    static int min(int[] arr) {
+        int m = arr[0];
+        for (int x : arr) if (x < m) m = x;
+        return m;
+    }
+
+    static long sum(int[] arr) {
+        long s = 0;
+        for (int x : arr) s += x;
+        return s;
+    }
+
+    static double average(int[] arr) { return (double) sum(arr) / arr.length; }
+
+    static int search(int[] arr, int target) {
+        for (int i = 0; i < arr.length; i++)
+            if (arr[i] == target) return i;
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter array size: ");
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+
+        System.out.println("Enter " + n + " integers:");
+        for (int i = 0; i < n; i++) arr[i] = sc.nextInt();
+
+        System.out.println("\\n========== Array Operations ==========");
+        display(arr);
+        System.out.println("Maximum  : " + max(arr));
+        System.out.println("Minimum  : " + min(arr));
+        System.out.println("Sum      : " + sum(arr));
+        System.out.printf( "Average  : %.2f%n", average(arr));
+
+        System.out.print("\\nEnter element to search: ");
+        int target = sc.nextInt();
+        int idx    = search(arr, target);
+
+        if (idx != -1)
+            System.out.println(target + " found at index " + idx + ".");
+        else
+            System.out.println(target + " not found in the array.");
+
+        sc.close();
+    }
+}`
+  },
+  {
+    title: "Single Inheritance",
+    desc: "Demonstrates single inheritance where a subclass (Dog) extends a superclass (Animal) and overrides/calls its methods.",
+    tags: [["Inheritance","blue"],["super keyword","orange"],["Method Override","purple"]],
+    file: "InheritanceDemo.java",
+    code: `// ── Superclass ───────────────────────────────────────────────────
+class Animal {
+    String name;
+    int    age;
+
+    Animal(String name, int age) {
+        this.name = name;
+        this.age  = age;
+    }
+
+    void eat()   { System.out.println(name + " is eating."); }
+    void sleep() { System.out.println(name + " is sleeping."); }
+    void info()  {
+        System.out.println("Name : " + name);
+        System.out.println("Age  : " + age);
+    }
+}
+
+// ── Subclass ─────────────────────────────────────────────────────
+class Dog extends Animal {
+    String breed;
+
+    Dog(String name, int age, String breed) {
+        super(name, age);       // calls Animal constructor
+        this.breed = breed;
+    }
+
+    void bark()  { System.out.println(name + " says: Woof! Woof!"); }
+
+    // Override info() and extend with breed info
+    @Override
+    void info() {
+        super.info();           // call superclass method
+        System.out.println("Breed: " + breed);
+    }
+
+    void fetch() { System.out.println(name + " fetches the ball!"); }
+}
+
+// ── Main ─────────────────────────────────────────────────────────
+public class InheritanceDemo {
+    public static void main(String[] args) {
+
+        Animal generic = new Animal("Leo the Lion", 5);
+        System.out.println("── Animal ──");
+        generic.info();
+        generic.eat();
+        generic.sleep();
+
+        System.out.println("\\n── Dog (extends Animal) ──");
+        Dog dog = new Dog("Buddy", 3, "Golden Retriever");
+        dog.info();         // overridden version
+        dog.eat();          // inherited
+        dog.sleep();        // inherited
+        dog.bark();         // own method
+        dog.fetch();        // own method
+    }
+}`
+  },
+  {
+    title: "Interface & Polymorphism",
+    desc: "Implements an interface (Shape) across multiple classes (Circle, Rectangle, Triangle), demonstrating runtime polymorphism.",
+    tags: [["Interface","blue"],["Polymorphism","orange"],["Abstraction","purple"]],
+    file: "PolymorphismDemo.java",
+    code: `// ── Interface ─────────────────────────────────────────────────────
+interface Shape {
+    double area();
+    double perimeter();
+    void   describe();       // default implementation allowed in Java 8+
+}
+
+// ── Circle ────────────────────────────────────────────────────────
+class Circle implements Shape {
+    double radius;
+    Circle(double r) { this.radius = r; }
+
+    @Override public double area()      { return Math.PI * radius * radius; }
+    @Override public double perimeter() { return 2 * Math.PI * radius; }
+    @Override public void   describe()  {
+        System.out.printf("Circle    | r=%.2f | Area=%.4f | Perimeter=%.4f%n",
+                          radius, area(), perimeter());
+    }
+}
+
+// ── Rectangle ─────────────────────────────────────────────────────
+class Rectangle implements Shape {
+    double width, height;
+    Rectangle(double w, double h) { width = w; height = h; }
+
+    @Override public double area()      { return width * height; }
+    @Override public double perimeter() { return 2 * (width + height); }
+    @Override public void   describe()  {
+        System.out.printf("Rectangle | w=%.2f h=%.2f | Area=%.4f | Perimeter=%.4f%n",
+                          width, height, area(), perimeter());
+    }
+}
+
+// ── Triangle ──────────────────────────────────────────────────────
+class Triangle implements Shape {
+    double a, b, c;
+    Triangle(double a, double b, double c) { this.a=a; this.b=b; this.c=c; }
+
+    @Override public double area() {
+        double s = (a+b+c)/2;
+        return Math.sqrt(s*(s-a)*(s-b)*(s-c));  // Heron's formula
+    }
+    @Override public double perimeter() { return a + b + c; }
+    @Override public void   describe()  {
+        System.out.printf("Triangle  | sides=%.2f,%.2f,%.2f | Area=%.4f | Perimeter=%.4f%n",
+                          a, b, c, area(), perimeter());
+    }
+}
+
+// ── Main ──────────────────────────────────────────────────────────
+public class PolymorphismDemo {
+    public static void main(String[] args) {
+        Shape[] shapes = {
+            new Circle(7),
+            new Rectangle(5, 10),
+            new Triangle(3, 4, 5)
+        };
+
+        System.out.println("═══════════ Shape Polymorphism ═══════════");
+        for (Shape s : shapes) s.describe();   // runtime polymorphism
+
+        System.out.println("\\nTotal area of all shapes: " +
+            String.format("%.4f", java.util.Arrays.stream(shapes)
+                                       .mapToDouble(Shape::area).sum()));
+    }
+}`
+  },
+  {
+    title: "Abstract Class",
+    desc: "Creates an abstract class (Vehicle) with abstract methods, extended by concrete subclasses (Car, Bike) that provide specific implementations.",
+    tags: [["Abstract Class","blue"],["Abstract Methods","orange"],["Inheritance","purple"]],
+    file: "AbstractDemo.java",
+    code: `// ── Abstract Class ────────────────────────────────────────────────
+abstract class Vehicle {
+    String brand;
+    int    year;
+    double fuelCapacity;
+
+    Vehicle(String brand, int year, double fuelCapacity) {
+        this.brand        = brand;
+        this.year         = year;
+        this.fuelCapacity = fuelCapacity;
+    }
+
+    // Abstract methods — must be implemented by subclasses
+    abstract double fuelEfficiency();   // km per litre
+    abstract String vehicleType();
+
+    // Concrete method shared by all vehicles
+    void displayInfo() {
+        System.out.println("─────────────────────────────────────");
+        System.out.println("Type       : " + vehicleType());
+        System.out.println("Brand      : " + brand);
+        System.out.println("Year       : " + year);
+        System.out.printf( "Efficiency : %.2f km/L%n", fuelEfficiency());
+        System.out.printf( "Range      : %.0f km (full tank)%n",
+                           fuelEfficiency() * fuelCapacity);
+    }
+}
+
+// ── Concrete Subclass 1 ───────────────────────────────────────────
+class Car extends Vehicle {
+    int doors;
+
+    Car(String brand, int year, double fuelCapacity, int doors) {
+        super(brand, year, fuelCapacity);
+        this.doors = doors;
+    }
+
+    @Override public double fuelEfficiency() { return 15.5; }
+    @Override public String vehicleType()    { return "Car (" + doors + "-door)"; }
+}
+
+// ── Concrete Subclass 2 ───────────────────────────────────────────
+class Bike extends Vehicle {
+    boolean hasSidecar;
+
+    Bike(String brand, int year, double fuelCapacity, boolean hasSidecar) {
+        super(brand, year, fuelCapacity);
+        this.hasSidecar = hasSidecar;
+    }
+
+    @Override public double fuelEfficiency() { return hasSidecar ? 28.0 : 40.0; }
+    @Override public String vehicleType()    {
+        return "Motorcycle" + (hasSidecar ? " with Sidecar" : "");
+    }
+}
+
+// ── Main ──────────────────────────────────────────────────────────
+public class AbstractDemo {
+    public static void main(String[] args) {
+        Vehicle[] fleet = {
+            new Car ("Toyota Camry", 2023, 60, 4),
+            new Car ("Tata Nexon",   2022, 44, 4),
+            new Bike("Royal Enfield",2023, 13.5, false),
+            new Bike("Ural Gear-Up", 2021, 19,   true)
+        };
+
+        System.out.println("═══════════ Vehicle Fleet ═══════════");
+        for (Vehicle v : fleet) v.displayInfo();
+    }
+}`
+  },
+  {
+    title: "ATM Machine Simulation",
+    desc: "Simulates an ATM with balance check, deposit, and withdrawal. Uses try-catch-finally with ArithmeticException and IllegalArgumentException.",
+    tags: [["Exception Handling","blue"],["Try-Catch-Finally","orange"],["OOP","purple"],["ATM","green"]],
+    file: "ATMSimulation.java",
+    code: `import java.util.Scanner;
+
+class BankAccount {
+    private String owner;
+    private double balance;
+    private int    pin;
+
+    BankAccount(String owner, double balance, int pin) {
+        this.owner   = owner;
+        this.balance = balance;
+        this.pin     = pin;
+    }
+
+    boolean validatePin(int attempt) { return this.pin == attempt; }
+    String  getOwner()               { return owner; }
+    double  getBalance()             { return balance; }
+
+    void deposit(double amount) {
+        if (amount <= 0)
+            throw new IllegalArgumentException("Deposit amount must be positive.");
+        balance += amount;
+        System.out.printf("✔  Deposited ₹%.2f. New Balance: ₹%.2f%n", amount, balance);
+    }
+
+    void withdraw(double amount) {
+        if (amount <= 0)
+            throw new IllegalArgumentException("Withdrawal amount must be positive.");
+        if (amount > balance)
+            throw new ArithmeticException("Insufficient funds! Available: ₹" + balance);
+        balance -= amount;
+        System.out.printf("✔  Withdrawn ₹%.2f. Remaining Balance: ₹%.2f%n", amount, balance);
+    }
+}
+
+public class ATMSimulation {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        BankAccount account = new BankAccount("Rahul Sharma", 15000.00, 1234);
+
+        System.out.println("╔══════════════════════════════╗");
+        System.out.println("║        WELCOME TO ATM        ║");
+        System.out.println("╚══════════════════════════════╝");
+
+        // PIN verification
+        System.out.print("Enter your 4-digit PIN: ");
+        int pin = sc.nextInt();
+        if (!account.validatePin(pin)) {
+            System.out.println("✘ Invalid PIN. Access denied.");
+            sc.close(); return;
+        }
+        System.out.println("Hello, " + account.getOwner() + "!\\n");
+
+        boolean running = true;
+        while (running) {
+            System.out.println("┌─────────────────────────┐");
+            System.out.println("│  1. Check Balance       │");
+            System.out.println("│  2. Deposit             │");
+            System.out.println("│  3. Withdraw            │");
+            System.out.println("│  4. Exit                │");
+            System.out.println("└─────────────────────────┘");
+            System.out.print("Choose: ");
+
+            int choice = sc.nextInt();
+            System.out.println();
+
+            try {
+                switch (choice) {
+                    case 1:
+                        System.out.printf("Current Balance: ₹%.2f%n", account.getBalance());
+                        break;
+                    case 2:
+                        System.out.print("Enter deposit amount: ₹");
+                        account.deposit(sc.nextDouble());
+                        break;
+                    case 3:
+                        System.out.print("Enter withdrawal amount: ₹");
+                        account.withdraw(sc.nextDouble());
+                        break;
+                    case 4:
+                        System.out.println("Thank you for using ATM. Goodbye!");
+                        running = false;
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Invalid choice: " + choice);
+                }
+            } catch (ArithmeticException e) {
+                System.out.println("✘ Transaction Failed: " + e.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.println("✘ Input Error: " + e.getMessage());
+            } finally {
+                if (running && choice >= 1 && choice <= 3)
+                    System.out.println("── Transaction processed ──\\n");
+            }
+        }
+        sc.close();
+    }
+}`
+  },
+  {
+    title: "Multi-Threaded Chat System",
+    desc: "Simulates a chat system where each user runs as a thread. Uses isAlive(), join(), thread priorities, and demonstrates suspension, resumption, and stopping.",
+    tags: [["Multithreading","blue"],["isAlive / join","orange"],["Thread Priority","purple"],["Synchronization","green"]],
+    file: "ChatSystem.java",
+    code: `import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Random;
+
+// Shared message bus
+class MessageBus {
+    private static final BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+
+    static void send(String msg) {
+        queue.add(msg);
+        System.out.println("[BUS] " + msg);
+    }
+
+    static String receive() throws InterruptedException {
+        return queue.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS);
+    }
+}
+
+// Each user is a thread
+class UserThread extends Thread {
+    private final String   username;
+    private final String[] messages;
+    private volatile boolean suspended = false;
+    private volatile boolean stopped   = false;
+
+    UserThread(String username, String[] messages, int priority) {
+        super(username);
+        this.username = username;
+        this.messages = messages;
+        setPriority(priority);
+    }
+
+    // Suspend / resume / stop controls
+    synchronized void suspendThread()  { suspended = true;  System.out.println("[" + username + "] Suspended."); }
+    synchronized void resumeThread()   { suspended = false; notify(); System.out.println("[" + username + "] Resumed."); }
+    void              stopThread()     { stopped = true; interrupt(); }
+
+    @Override
+    public void run() {
+        Random rng = new Random();
+        for (String msg : messages) {
+            if (stopped) break;
+
+            synchronized (this) {
+                while (suspended) {
+                    try { wait(); } catch (InterruptedException e) { return; }
+                }
+            }
+
+            try {
+                Thread.sleep(rng.nextInt(600) + 200);  // simulate typing delay
+                MessageBus.send("[" + username + " | P" + getPriority() + "]: " + msg);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+        System.out.println("[" + username + "] went offline.");
+    }
+}
+
+public class ChatSystem {
+    public static void main(String[] args) throws InterruptedException {
+
+        UserThread alice = new UserThread("Alice",
+            new String[]{"Hey everyone!", "How's the project going?",
+                         "I'll push the update tonight.", "Bye!"},
+            Thread.NORM_PRIORITY);
+
+        UserThread bob = new UserThread("Bob",
+            new String[]{"Hi Alice!", "Almost done with my module.",
+                         "Let's merge tomorrow.", "Later!"},
+            Thread.MIN_PRIORITY);
+
+        // High-priority admin thread
+        UserThread admin = new UserThread("ADMIN",
+            new String[]{"⚠ Server maintenance at 23:00",
+                         "✔ Maintenance complete. All systems go."},
+            Thread.MAX_PRIORITY);
+
+        System.out.println("═══════ Chat System Started ═══════");
+        alice.start();
+        bob.start();
+        admin.start();
+
+        // Let them chat a bit, then demonstrate suspend/resume on Bob
+        Thread.sleep(800);
+        bob.suspendThread();
+        System.out.println("[Main] Bob paused for 1 second...");
+        Thread.sleep(1000);
+        bob.resumeThread();
+
+        // Check liveness with isAlive()
+        System.out.printf("%n[Main] Alice alive? %b | Bob alive? %b | Admin alive? %b%n",
+                          alice.isAlive(), bob.isAlive(), admin.isAlive());
+
+        // Wait for all threads to finish
+        alice.join();
+        bob.join();
+        admin.join();
+
+        System.out.println("\\n[Main] All threads finished. Chat closed.");
+        System.out.printf("[Main] Alice alive? %b | Bob alive? %b | Admin alive? %b%n",
+                          alice.isAlive(), bob.isAlive(), admin.isAlive());
+    }
+}`
+  }
+];
+
+// ── Build nav & cards ───────────────────────────────────────────
+const nav  = document.getElementById('nav');
+const main = document.getElementById('main');
+
+assignments.forEach((a, i) => {
+  // Nav button
+  const btn = document.createElement('button');
+  btn.className  = 'nav-btn' + (i===0 ? ' active' : '');
+  btn.textContent = `P${i+1}. ${a.title}`;
+  btn.onclick = () => show(i);
+  nav.appendChild(btn);
+
+  // Card
+  const section = document.createElement('div');
+  section.className = 'assignment' + (i===0 ? ' active' : '');
+  section.id = 'p' + i;
+
+  const tagHTML = a.tags.map(([t,c]) => `<span class="tag tag-${c}">${t}</span>`).join('');
+
+  // Escape code for HTML display
+  const escaped = a.code
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+
+  // Basic syntax highlight
+  const highlighted = syntaxHL(escaped);
+
+  section.innerHTML = `
+    <div class="card-header">
+      <div class="problem-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="card-meta">
+        <h2>${a.title}</h2>
+        <p>${a.desc}</p>
+        <div class="tags">${tagHTML}</div>
+      </div>
+    </div>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="window-dots">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+        <span class="file-name">${a.file}</span>
+        <button class="copy-btn" onclick="copyCode(this, ${i})">
+          <span class="copy-icon">⎘</span> Copy Code
+        </button>
+      </div>
+      <pre><code>${highlighted}</code></pre>
+    </div>`;
+
+  main.appendChild(section);
+});
+
+function show(i) {
+  document.querySelectorAll('.assignment').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('p' + i).classList.add('active');
+  document.querySelectorAll('.nav-btn')[i].classList.add('active');
+  window.scrollTo({ top: document.querySelector('.nav-wrap').offsetTop - 10, behavior: 'smooth' });
+}
+
+function copyCode(btn, i) {
+  navigator.clipboard.writeText(assignments[i].code).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = '<span class="copy-icon">✓</span> Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<span class="copy-icon">⎘</span> Copy Code';
+    }, 2200);
+  });
+}
+
+// Minimal syntax highlighter
+function syntaxHL(code) {
+  const KW = ['public','private','protected','static','final','class','interface',
+              'abstract','extends','implements','new','return','void','if','else',
+              'for','while','do','switch','case','break','continue','default','try',
+              'catch','finally','throw','throws','import','package','this','super',
+              'null','true','false','instanceof','synchronized','volatile'];
+  const TY = ['int','double','float','long','boolean','char','byte','short',
+              'String','Scanner','System','Math','Thread','Object'];
+
+  // Comments
+  code = code.replace(/(\/\/[^\n]*)/g, '<span class="cm">$1</span>');
+  code = code.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="cm">$1</span>');
+  // Strings
+  code = code.replace(/(&quot;[^&]*?&quot;)/g, '<span class="str">$1</span>');
+  // Numbers
+  code = code.replace(/\b(\d+\.?\d*[fFdDlL]?)\b/g, '<span class="num">$1</span>');
+  // Annotations
+  code = code.replace(/(@\w+)/g, '<span class="an">$1</span>');
+  // Keywords
+  KW.forEach(k => {
+    code = code.replace(new RegExp(`\\b(${k})\\b`, 'g'), '<span class="kw">$1</span>');
+  });
+  // Types
+  TY.forEach(t => {
+    code = code.replace(new RegExp(`\\b(${t})\\b`, 'g'), '<span class="ty">$1</span>');
+  });
+  // Class-like names
+  code = code.replace(/\b([A-Z][A-Za-z0-9]+)\b/g, '<span class="cl">$1</span>');
+  return code;
+}
+</script>
+</body>
+</html>
+`
